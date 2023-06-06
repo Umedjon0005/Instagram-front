@@ -17,7 +17,6 @@ export const AddPost = () => {
   const [isLoading, setLoading] = React.useState(false);
   const [text, setText] = React.useState('');
   const [title, setTitle] = React.useState('');
-  const [tags, setTags] = React.useState('');
   const [imageUrl, setImageUrl] = React.useState('');
   const inputFileRef = React.useRef(null);
 
@@ -51,7 +50,6 @@ export const AddPost = () => {
       const fields = {
         title,
         imageUrl,
-        tags,
         text
       }
       const { data }= isEditing ? await axios.patch(`/posts/${id}`, fields) : await axios.post('/posts', fields);
@@ -72,7 +70,6 @@ export const AddPost = () => {
         setTitle(data.title)
         setText(data.text)
         setImageUrl(data.imageUrl)
-        setTags(data.tags.join(','))
       }).catch((err) => {
         console.warn(err);
         alert('Error with update')
@@ -99,8 +96,6 @@ export const AddPost = () => {
       return <Navigate to='/'/>
     }
 
-    console.log({title, tags, text});
-
   return (
     <Paper style={{ padding: 30 }}>
       <Button onClick={() => inputFileRef.current.click()} variant="outlined" size="large">
@@ -126,10 +121,6 @@ export const AddPost = () => {
         onChange={e => setTitle(e.target.value)}
         fullWidth
       />
-      <TextField
-        value={tags}
-        onChange={e => setTags(e.target.value)}
-       classes={{ root: styles.tags }} variant="standard" placeholder="Тэги" fullWidth />
       <SimpleMDE className={styles.editor} value={text} onChange={onChange} options={options} />
       <div className={styles.buttons}>
         <Button onClick={onSubmit} size="large" variant="contained">
